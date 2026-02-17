@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IPO Accounts</title>
+    <link rel="icon" type="image/png" href="https://ipo.dhakalnishan.com.np/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f6f7fb;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: #374151;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 18px auto;
+            padding: 0 14px;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .nameRow {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .name {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .btn {
+            border: 1px solid #d1d5db;
+            background: #fff;
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn:hover {
+            background: #f3f4f6;
+        }
+
+        .rows {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .label {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .value {
+            font-size: 13px;
+            word-break: break-all;
+            color: var(--text-main);
+        }
+
+        .empty {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        .btn {
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg-color);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111827;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Accordion styles for mobile */
+        @media (max-width: 768px) {
+            .accordion-button {
+                font-size: 16px;
+                font-weight: 700;
+                padding: 12px 14px;
+                background-color: var(--card-bg);
+                color: var(--text-main);
+            }
+
+            .accordion-button:not(.collapsed) {
+                background-color: var(--bg-color);
+                color: var(--text-main);
+            }
+
+            .accordion-body {
+                padding: 0 14px 14px 14px;
+                background-color: var(--card-bg);
+            }
+
+            .card {
+                padding: 0;
+                overflow: hidden;
+            }
+        }
+
+        /* Modal styles */
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 14px;
+            margin-top: 30px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="theme-toggle">
+        <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <div id="grid" class="grid"></div>
+    </div>
+
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="accountModalLabel">Account Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Account details will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Check IPO result here: <a href="https://iporesult.cdsc.com.np/" target="_blank" rel="noopener noreferrer">Result
+            Check</a>
+    </footer>
+
+    <div id="toast" class="toast">Copied</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = "https://ipo.dhakalnishan.com.np/accounts.json";
+
+        const gridEl = document.getElementById("grid");
+        const toastEl = document.getElementById("toast");
+
+        let allData = [];
+
+        function showToast(text) {
+            toastEl.textContent = text;
+            toastEl.classList.add("show");
+            setTimeout(() => toastEl.classList.remove("show"), 1200);
+        }
+
+        async function copyText(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast("Copied");
+            } catch (e) {
+                // fallback
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                showToast("Copied");
+            }
+        }
+
+        function safeValue(v) {
+            if (v === null || v === undefined || String(v).trim() === "") {
+                return { text: "empty", empty: true };
+            }
+            return { text: String(v), empty: false };
+        }
+
+        function render(data) {
+            gridEl.innerHTML = "";
+
+            if (!data.length) {
+                return;
+            }
+
+            const isMobile = window.innerWidth <= 768;
+
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+
+                if (isMobile) {
+                    // Mobile: Use Bootstrap Accordion
+                    const card = document.createElement("div");
+                    card.className = "card accordion-item";
+
+                    const header = document.createElement("h2");
+                    header.className = "accordion-header";
+                    header.id = `heading${i}`;
+
+                    const button = document.createElement("button");
+                    button.className = "accordion-button collapsed";
+                    button.type = "button";
+                    button.setAttribute("data-bs-toggle", "collapse");
+                    button.setAttribute("data-bs-target", `#collapse${i}`);
+                    button.setAttribute("aria-expanded", "false");
+                    button.setAttribute("aria-controls", `collapse${i}`);
+                    button.textContent = item.name || "Unnamed";
+
+                    header.appendChild(button);
+
+                    const collapseDiv = document.createElement("div");
+                    collapseDiv.id = `collapse${i}`;
+                    collapseDiv.className = "accordion-collapse collapse";
+                    collapseDiv.setAttribute("aria-labelledby", `heading${i}`);
+
+                    const body = document.createElement("div");
+                    body.className = "accordion-body";
+
+                    const rows = document.createElement("div");
+                    rows.className = "rows";
+
+                    const fields = [
+                        ["dp_id", "DP ID"],
+                        ["login_id", "Login ID"],
+                        ["key", "Key"],
+                        ["account_number", "Account Number"],
+                        ["crn", "CRN"],
+                        ["boid", "BOID"]
+                    ];
+
+                    for (const [key, label] of fields) {
+                        const row = document.createElement("div");
+                        row.className = "row";
+
+                        const lab = document.createElement("div");
+                        lab.className = "label";
+                        lab.textContent = label;
+
+                        const valObj = safeValue(item[key]);
+                        const val = document.createElement("div");
+                        val.className = "value" + (valObj.empty ? " empty" : "");
+                        val.textContent = valObj.text;
+
+                        const btn = document.createElement("button");
+                        btn.className = "btn";
+                        btn.textContent = "Copy";
+                        btn.onclick = () => copyText(valObj.empty ? "" : String(item[key]));
+
+                        row.appendChild(lab);
+                        row.appendChild(val);
+                        row.appendChild(btn);
+
+                        rows.appendChild(row);
+                    }
+
+                    body.appendChild(rows);
+                    collapseDiv.appendChild(body);
+                    card.appendChild(header);
+                    card.appendChild(collapseDiv);
+                    gridEl.appendChild(card);
+                } else {
+                    // Desktop: Show only name, click to open modal
+                    const card = document.createElement("div");
+                    card.className = "card";
+                    card.style.textAlign = "center";
+                    card.style.padding = "20px";
+
+                    const name = document.createElement("h3");
+                    name.className = "name";
+                    name.textContent = item.name || "Unnamed";
+                    name.style.margin = "0";
+
+                    card.appendChild(name);
+
+                    // Click to open modal
+                    card.addEventListener("click", () => openModal(item));
+
+                    gridEl.appendChild(card);
+                }
+            }
+        }
+
+        function openModal(item) {
+            const modalBody = document.getElementById("modalBody");
+            const modalLabel = document.getElementById("accountModalLabel");
+
+            modalLabel.textContent = item.name || "Unnamed";
+
+            const fields = [
+                ["dp_id", "DP ID"],
+                ["login_id", "Login ID"],
+                ["key", "Key"],
+                ["account_number", "Account Number"],
+                ["crn", "CRN"],
+                ["boid", "BOID"]
+            ];
+
+            let html = '<div class="rows">';
+
+            for (const [key, label] of fields) {
+                const valObj = safeValue(item[key]);
+                html += `
+                    <div class="row">
+                        <div class="label">${label}</div>
+                        <div class="value${valObj.empty ? ' empty' : ''}">${valObj.text}</div>
+                        <button class="btn" onclick="copyText('${valObj.empty ? '' : String(item[key]).replace(/'/g, "\\'")}')">Copy</button>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            modalBody.innerHTML = html;
+
+            const modal = new bootstrap.Modal(document.getElementById('accountModal'));
+            modal.show();
+        }
+
+        async function loadData() {
+            gridEl.innerHTML = "";
+
+            try {
+                const res = await fetch(API_URL, { cache: "no-store" });
+                if (!res.ok) throw new Error("HTTP " + res.status);
+
+                const json = await res.json();
+
+                if (!Array.isArray(json)) {
+                    throw new Error("API did not return an array");
+                }
+
+                // Normalize keys to your format (just in case)
+                allData = json.map(x => ({
+                    name: x.name ?? "",
+                    dp_id: x.dp_id ?? "",
+                    login_id: x.login_id ?? "",
+                    key: x.key ?? "",
+                    account_number: x.account_number ?? "",
+                    crn: x.crn ?? "",
+                    boid: x.boid ?? ""
+                }));
+
+                render(allData);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Re-render on window resize to switch between mobile/desktop views
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (allData.length > 0) {
+                    render(allData);
+                }
+            }, 250);
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        });
+
+        loadData();
+    </script>
+</body>
+
+</html>

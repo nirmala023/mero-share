@@ -85,3 +85,15 @@ h2 {
     font-size: 0.85rem;
     border-radius: 10px;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.input-group-text:last-child {
+    border-left: none;
+}
+
+.form-control:not(:last-child) {
+    border-right: none;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - IPO Accounts</title>
+    <link rel="icon" type="image/png" href="https://ipo.dhakalnishan.com.np/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body class="d-flex align-items-center justify-content-center">
+    <div class="login-card">
+        <div class="text-center mb-4">
+            <div class="logo-circle mb-3">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h2>IPO Accounts</h2>
+            <p class="text-muted">Please sign in to continue</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                </div>
+            </div>
+            <div id="errorMessage" class="alert alert-danger d-none mb-3"></div>
+            <button type="submit" class="btn btn-primary w-100 py-2" id="loginBtn">
+                <span id="btnText">Sign In</span>
+                <span id="btnLoader" class="spinner-border spinner-border-sm d-none ms-2"></span>
+            </button>
+        </form>
+    </div>
+
+    <script type="module" src="auth.js"></script>
+    <script type="module" src="login.js"></script>
+</body>
+
+</html>
